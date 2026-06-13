@@ -1,0 +1,46 @@
+[
+    {
+        "id": 30,
+        "name": "Beauty &amp; Wellness",
+        "slug": "beauty-and-wellness",
+        "description": "",
+        "parent": 0,
+        "count": 12,
+        "image": null,
+        "review_count": 0,
+        "permalink": "https://nuxt.meidanm.com/product-category/beauty-and-wellness/"
+    },
+    {
+        "id": 27,
+        "name": "test",
+        "slug": "test",
+        "description": "",
+        "parent": 0,
+        "count": 6,
+        "image": null,
+        "review_count": 0,
+        "permalink": "https://nuxt.meidanm.com/product-category/test/"
+    },
+    {
+        "id": 28,
+        "name": "TEST2",
+        "slug": "test2",
+        "description": "",
+        "parent": 0,
+        "count": 1,
+        "image": null,
+        "review_count": 0,
+        "permalink": "https://nuxt.meidanm.com/product-category/test2/"
+    },
+    {
+        "id": 16,
+        "name": "Uncategorized",
+        "slug": "uncategorized",
+        "description": "",
+        "parent": 0,
+        "count": 5,
+        "image": null,
+        "review_count": 0,
+        "permalink": "https://nuxt.meidanm.com/product-category/uncategorized/"
+    }
+]

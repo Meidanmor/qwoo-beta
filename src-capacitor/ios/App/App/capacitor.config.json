@@ -1,0 +1,26 @@
+{
+	"appId": "com.naturabloom.app",
+	"appName": "wc-pwa-shop",
+	"webDir": "www",
+	"server": {
+		"hostname": "pwav.meidanm.com",
+		"androidScheme": "https"
+	},
+	"android": {
+		"adjustMarginsForEdgeToEdge": "force"
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 5000,
+			"launchAutoHide": false,
+			"backgroundColor": "#000000",
+			"showSpinner": false
+		}
+	},
+	"packageClassList": [
+		"AppPlugin",
+		"PushNotificationsPlugin",
+		"SplashScreenPlugin",
+		"SocialLoginPlugin"
+	]
+}

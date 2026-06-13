@@ -1,0 +1,11 @@
+const scrollRestoration = () => {
+  console.log("script is runnign");
+  if (typeof window !== "undefined" && "scrollRestoration" in history) {
+    console.log("removing browser scroll");
+    history.scrollRestoration = "manual";
+  }
+};
+export {
+  scrollRestoration as default
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2Nyb2xsLXJlc3RvcmF0aW9uLUJra1hTa2hJLmpzIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvYm9vdC9zY3JvbGwtcmVzdG9yYXRpb24uanMiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gc3JjL2Jvb3Qvc2Nyb2xsLXJlc3RvcmF0aW9uLmpzXHJcbmV4cG9ydCBkZWZhdWx0ICgpID0+IHtcclxuICBjb25zb2xlLmxvZygnc2NyaXB0IGlzIHJ1bm5pZ24nKVxyXG4gIGlmICh0eXBlb2Ygd2luZG93ICE9PSAndW5kZWZpbmVkJyAmJiAnc2Nyb2xsUmVzdG9yYXRpb24nIGluIGhpc3RvcnkpIHtcclxuICAgIGNvbnNvbGUubG9nKCdyZW1vdmluZyBicm93c2VyIHNjcm9sbCcpXHJcbiAgICBoaXN0b3J5LnNjcm9sbFJlc3RvcmF0aW9uID0gJ21hbnVhbCdcclxuICB9XHJcbn0iXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0EsTUFBQSxvQkFBZSxNQUFNO0FBQ25CLFVBQVEsSUFBSSxtQkFBbUI7QUFDL0IsTUFBSSxPQUFPLFdBQVcsZUFBZSx1QkFBdUIsU0FBUztBQUNuRSxZQUFRLElBQUkseUJBQXlCO0FBQ3JDLFlBQVEsb0JBQW9CO0FBQUEsRUFDOUI7QUFDRjsifQ==

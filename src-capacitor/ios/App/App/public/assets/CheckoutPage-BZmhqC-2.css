@@ -1,0 +1,21 @@
+
+.q-field__label[data-v-03edb1d8] {
+    transition: 0.3s ease;
+}
+.q-field--focused .q-field__label
+.q-field--float .q-field__label[data-v-03edb1d8]{
+  font-size: 10px;
+  transform: translateY(-5px);
+}
+.q-form .float-left[data-v-03edb1d8],
+.q-form .float-right[data-v-03edb1d8] {
+  width: 100%;
+}
+@media(min-width: 768px) {
+.q-form .float-left[data-v-03edb1d8] {
+    width: 57%;
+}
+.q-form .float-right[data-v-03edb1d8] {
+    width: 41%;
+}
+}

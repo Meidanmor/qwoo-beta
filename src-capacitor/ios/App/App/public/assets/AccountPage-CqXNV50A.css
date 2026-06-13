@@ -1,0 +1,19 @@
+
+.q-expansion-item__container.relative-position .q-icon,
+.q-expansion-item__container.relative-position .q-item__label {
+    fill: var(--q-secondary);
+    color: var(--q-secondary);
+}
+
+.q-field__label[data-v-a935b52f] {
+    transition: 0.3s ease;
+}
+.q-field--focused .q-field__label
+.q-field--float .q-field__label[data-v-a935b52f]{
+  font-size: 10px;
+  transform: translateY(-5px);
+}
+div.q-tab-panels[data-v-a935b52f] {
+  background: transparent;
+}
+

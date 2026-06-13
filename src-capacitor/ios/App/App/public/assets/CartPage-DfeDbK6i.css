@@ -1,0 +1,9 @@
+
+.empty-cart-msg[data-v-d1289879] {
+  padding: 20px 0;
+  font-size: 20px;
+}
+.empty-cart-msg a[data-v-d1289879] {
+  text-decoration: underline;
+  font-weight: 600;
+}

@@ -1,0 +1,24 @@
+async function fetchSeoForPath(path) {
+  const result = {
+    title: "NaturaBloom",
+    description: "Let's Bloom Together",
+    robots: "index, follow, max-image-preview:large",
+    og_image: "",
+    og_type: "website"
+  };
+  try {
+    const res = await fetch(
+      `https://nuxt.meidanm.com/wp-json/custom/v1/seo?path=${encodeURIComponent(path)}`
+    );
+    if (!res.ok) return result;
+    const json = await res.json();
+    return { ...result, ...json };
+  } catch (err) {
+    console.error("[fetchSeoForPath] fetch error", err);
+    return result;
+  }
+}
+export {
+  fetchSeoForPath
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlU2VvLURRbGtTbEVNLmpzIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvY29tcG9zYWJsZXMvdXNlU2VvLmpzIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIHNyYy9jb21wb3NhYmxlcy91c2VTZW8uanNcclxuLy8gbGlnaHR3ZWlnaHQgaGVscGVyIHRoYXQgY2FuIGJlIHVzZWQgZnJvbSBkZWZpbmVPcHRpb25zIHByZUZldGNoIChpbXBvcnQtb25seSlcclxuZXhwb3J0IGFzeW5jIGZ1bmN0aW9uIGZldGNoU2VvRm9yUGF0aChwYXRoKSB7XHJcbiAgLy8gRGVmaW5lIGRlZmF1bHQgZmFsbGJhY2tzXHJcbiAgY29uc3QgcmVzdWx0ID0ge1xyXG4gICAgdGl0bGU6ICdOYXR1cmFCbG9vbScsXHJcbiAgICBkZXNjcmlwdGlvbjogXCJMZXQncyBCbG9vbSBUb2dldGhlclwiLFxyXG4gICAgcm9ib3RzOiAnaW5kZXgsIGZvbGxvdywgbWF4LWltYWdlLXByZXZpZXc6bGFyZ2UnLFxyXG4gICAgb2dfaW1hZ2U6ICcnLFxyXG4gICAgb2dfdHlwZTogJ3dlYnNpdGUnXHJcbiAgfVxyXG5cclxuICB0cnkge1xyXG4gICAgY29uc3QgcmVzID0gYXdhaXQgZmV0Y2goXHJcbiAgICAgIGBodHRwczovL251eHQubWVpZGFubS5jb20vd3AtanNvbi9jdXN0b20vdjEvc2VvP3BhdGg9JHtlbmNvZGVVUklDb21wb25lbnQocGF0aCl9YFxyXG4gICAgKVxyXG5cclxuICAgIGlmICghcmVzLm9rKSByZXR1cm4gcmVzdWx0XHJcblxyXG4gICAgY29uc3QganNvbiA9IGF3YWl0IHJlcy5qc29uKClcclxuXHJcbiAgICAvLyBVc2UgdGhlIFNwcmVhZCBvcGVyYXRvciAoLi4uKSB0byBtZXJnZSB0aGUgQVBJIGRhdGFcclxuICAgIC8vIGludG8geW91ciByZXN1bHQgb2JqZWN0LiBUaGlzIGtlZXBzIGFsbCBuZXcgZmllbGRzIVxyXG4gICAgcmV0dXJuIHsgLi4ucmVzdWx0LCAuLi5qc29uIH1cclxuXHJcbiAgfSBjYXRjaCAoZXJyKSB7XHJcbiAgICBjb25zb2xlLmVycm9yKCdbZmV0Y2hTZW9Gb3JQYXRoXSBmZXRjaCBlcnJvcicsIGVycilcclxuICAgIHJldHVybiByZXN1bHRcclxuICB9XHJcbn0iXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRU8sZUFBZSxnQkFBZ0IsTUFBTTtBQUUxQyxRQUFNLFNBQVM7QUFBQSxJQUNiLE9BQU87QUFBQSxJQUNQLGFBQWE7QUFBQSxJQUNiLFFBQVE7QUFBQSxJQUNSLFVBQVU7QUFBQSxJQUNWLFNBQVM7QUFBQSxFQUNiO0FBRUUsTUFBSTtBQUNGLFVBQU0sTUFBTSxNQUFNO0FBQUEsTUFDaEIsdURBQXVELG1CQUFtQixJQUFJLENBQUM7QUFBQSxJQUNyRjtBQUVJLFFBQUksQ0FBQyxJQUFJLEdBQUksUUFBTztBQUVwQixVQUFNLE9BQU8sTUFBTSxJQUFJLEtBQUk7QUFJM0IsV0FBTyxFQUFFLEdBQUcsUUFBUSxHQUFHLEtBQUk7QUFBQSxFQUU3QixTQUFTLEtBQUs7QUFDWixZQUFRLE1BQU0saUNBQWlDLEdBQUc7QUFDbEQsV0FBTztBQUFBLEVBQ1Q7QUFDRjsifQ==

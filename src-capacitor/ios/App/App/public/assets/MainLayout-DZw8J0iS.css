@@ -1,0 +1,44 @@
+
+.cookie-banner[data-v-16994dde] {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  background: white;
+  color: #111;
+  border-radius: 18px;
+  padding: 40px 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.cookie-text[data-v-16994dde] {
+  flex: 1;
+  min-width: 220px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.cookie-actions[data-v-16994dde] {
+  display: flex;
+  gap: 8px;
+}
+.fade-enter-active[data-v-16994dde],
+.fade-leave-active[data-v-16994dde] {
+  transition: opacity .25s ease;
+}
+.fade-enter-from[data-v-16994dde],
+.fade-leave-to[data-v-16994dde] {
+  opacity: 0;
+}
+@media (max-width: 600px) {
+.cookie-actions[data-v-16994dde] {
+    width: 100%;
+}
+.cookie-actions .q-btn[data-v-16994dde] {
+    flex: 1;
+}
+}

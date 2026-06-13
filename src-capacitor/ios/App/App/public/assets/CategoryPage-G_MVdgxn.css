@@ -1,0 +1,98 @@
+.q-breadcrumbs[data-v-4cdf1cd6],
+h1[data-v-4cdf1cd6]{
+  margin: 20px 0;
+}
+.q-breadcrumbs[data-v-4cdf1cd6],
+h1[data-v-4cdf1cd6],
+.products-wrap > row[data-v-4cdf1cd6],
+.total-products[data-v-4cdf1cd6] {
+    padding: 0 16px;
+}
+.archive-layout.flex[data-v-4cdf1cd6] {
+  column-gap: 20px;
+}
+.my-card[data-v-4cdf1cd6] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.products-wrap[data-v-4cdf1cd6] {
+  flex: 1;
+  padding-bottom: 20px;
+}
+.products-inner[data-v-4cdf1cd6] {
+  flex: 100%;
+}
+.filters-wrap[data-v-4cdf1cd6] {
+  width: 25%;
+  row-gap: 25px;
+  flex-direction: column;
+  position: sticky;
+  top: 70px;
+  height: fit-content;
+}
+.products-wrap .q-select[data-v-4cdf1cd6] {
+  min-width: 160px;
+}
+.q-checkbox[aria-checked="true"] .q-checkbox__label[data-v-4cdf1cd6] {
+    font-weight: 600;
+}
+@media(max-width: 767px) {
+.filters-wrap[data-v-4cdf1cd6] {
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        z-index: 9999;
+        height: 100dvh;
+        background: var(--q-primary);
+        width: 85%;
+        box-shadow: 0 0 50px #00000050;
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        transform: translateX(-100%);
+        transition: 0.3s ease;
+}
+.filters-wrap.shown[data-v-4cdf1cd6] {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+}
+.flex.justify-between.q-mb-md.sticky[data-v-4cdf1cd6] {
+        position: sticky;
+        top: 58px;
+        z-index: 9;
+        background: var(--q-primary);
+        padding: 10px;
+}
+.products-inner[data-v-4cdf1cd6] {
+        padding: 20px 16px 0;
+}
+.products-inner > div[data-v-4cdf1cd6] {
+        width: 50%;
+}
+.products-inner[data-v-4cdf1cd6] .q-card {
+        padding: 0;
+}
+.products-inner[data-v-4cdf1cd6] .q-img {
+        max-height: 180px;
+}
+}
+@media(min-width: 768px){
+.products-wrap[data-v-4cdf1cd6] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.flex.justify-between.q-mb-md[data-v-4cdf1cd6] {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+}
+.pagination-btns[data-v-4cdf1cd6] {
+    width: 100%;
+    margin-bottom: 20px;
+}
+}

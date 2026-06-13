@@ -1,0 +1,18 @@
+
+.q-expansion-item__container.relative-position .q-icon,
+.q-expansion-item__container.relative-position .q-item__label {
+    fill: var(--q-secondary);
+    color: var(--q-secondary);
+}
+
+.q-field__label[data-v-c8a51071] {
+  transition: 0.3s ease;
+}
+.q-field--focused .q-field__label[data-v-c8a51071],
+.q-field--float .q-field__label[data-v-c8a51071] {
+  font-size: 10px;
+  transform: translateY(-5px);
+}
+div.q-tab-panels[data-v-c8a51071] {
+  background: transparent;
+}
