@@ -77,7 +77,6 @@ async function updateDetails() {
   saveError.value   = ''
   saveSuccess.value = false
   saving.value      = true
-
   try {
     const res  = await fetchWithToken(`${API}/wp-json/qwoo/v1/me`, {
       method: 'POST',
