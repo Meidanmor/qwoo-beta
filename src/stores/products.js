@@ -27,6 +27,9 @@ async function getFeaturedProducts(ids = []) {
     query.append('per_page', ids.length)
 
     console.log('env api url', import.meta.env.VITE_API_BASE);
+    console.log('env api url', import.meta.env);
+    console.log(process.env.VITE_API_BASE)
+    console.log(process.env)
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE}/wp-json/wc/store/v1/products?${query.toString()}`
     )
