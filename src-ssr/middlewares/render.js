@@ -108,9 +108,9 @@ export default defineSsrMiddleware(({ app, resolve, render, /*serve*/ }) => {
       <link 
         rel="preload" 
         as="image" 
-        href="${heroData.src}" 
-        imagesrcset="${heroData.srcset}" 
-        imagesizes="${heroData.sizes}" 
+        href="${heroData?.src}" 
+        imagesrcset="${heroData?.srcset}" 
+        imagesizes="${heroData?.sizes}" 
         fetchpriority="high"
       >` : ''}
     <style>
