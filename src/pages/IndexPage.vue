@@ -8,7 +8,7 @@
         alt="Homepage hero image"
         :src="`${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)}`"
         :srcset="`${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)} 300w,${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-768x429$1`)} 768w,${homeSettings?.hero_img} 1024w`"
-        sizes="(min-width: 768px) 50vw, calc(100vw - 40px)"
+        sizes="100vw"
         width="300"
         height="200"
         class="hero-img"
@@ -379,7 +379,7 @@ defineOptions({
       ssrContext.heroData = {
         src: `${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)}`,
         srcset: `${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)} 300w,${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-768x429$1`)} 768w,${configData?.hero_img} 1024w`,
-        sizes: '(min-width: 768px) 50vw, calc(100vw - 40px)'
+        sizes: '100vw'
       }
     } else {
       window.__PAGE_CONFIG__ = configData;
