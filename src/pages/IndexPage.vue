@@ -1,6 +1,18 @@
 <template>
   <div>
-<section class="hero-section-sec" :style="{backgroundImage: `url(${homeSettings?.hero_img})`}">
+<section class="hero-section-sec">
+      <img
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+        alt="Homepage hero image"
+        :src="`${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)}`"
+        :srcset="`${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)} 300w,${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-768x429$1`)} 768w,${homeSettings?.hero_img} 1024w`"
+        sizes="(min-width: 768px) 50vw, calc(100vw - 40px)"
+        width="300"
+        height="200"
+        class="hero-img"
+      />
   <div class="hero-section container hero-margin row">
 
     <div class="hero-content col-12 col-md-6 q-mb-lg">
@@ -334,10 +346,6 @@ defineExpose({ scrollToProducts })
 // Inside your Page or Layout
 defineOptions({
   async preFetch ({ ssrContext, currentRoute }) {
-    const API_BASE =
-  import.meta.env.SSR
-    ? process.env.VITE_API_BASE   // ✅ your server env (Vercel)
-    : import.meta.env.VITE_API_BASE // ✅ client env
 
     const {fetchSeoForPath} = await import('src/composables/useSeo')
     /*const seo = await fetchSeoForPath('homepage')
@@ -369,9 +377,9 @@ defineOptions({
       ssrContext.pageConfig = configData
       // 2. Attach it to the rendered state (for the component)
       ssrContext.heroData = {
-        src: `${API_BASE}/wp-content/uploads/2026/06/qwoo-hero-image.webp`,
-        //srcset: `${API_BASE}/wp-content/uploads/2025/10/naturabloom-hero-cover-300x300.png 300w,${import.meta.env.VITE_API_BASE}/wp-content/uploads/2025/10/naturabloom-hero-cover-768x512.png 768w,${import.meta.env.VITE_API_BASE}/wp-content/uploads/2025/10/naturabloom-hero-cover.png 1024w`,
-        //sizes: '(min-width: 768px) 50vw, calc(100vw - 40px)'
+        src: `${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)}`,
+        srcset: `${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)} 300w,${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-768x429$1`)} 768w,${configData?.hero_img} 1024w`,
+        sizes: '(min-width: 768px) 50vw, calc(100vw - 40px)'
       }
     } else {
       window.__PAGE_CONFIG__ = configData;
