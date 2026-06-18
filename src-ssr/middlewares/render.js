@@ -117,7 +117,6 @@ export default defineSsrMiddleware(({ app, resolve, render, /*serve*/ }) => {
       .hero-section-sec, .lcp-wrapper, .hero-img, .q-layout, .q-page-container, #q-app {
         opacity: 1 !important;
         visibility: visible !important;
-        display: block !important;
         transition: none !important;
         animation: none !important;
       }

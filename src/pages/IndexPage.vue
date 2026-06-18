@@ -6,8 +6,7 @@
         loading="eager"
         decoding="async"
         alt="Homepage hero image"
-        :src="`${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)}`"
-        :srcset="`${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)} 300w,${homeSettings?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-768x429$1`)} 768w,${homeSettings?.hero_img} 1024w`"
+        :src="`${homeSettings?.hero_img}`"
         sizes="100vw"
         width="300"
         height="200"
@@ -377,9 +376,7 @@ defineOptions({
       ssrContext.pageConfig = configData
       // 2. Attach it to the rendered state (for the component)
       ssrContext.heroData = {
-        src: `${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)}`,
-        srcset: `${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-300x300$1`)} 300w,${configData?.hero_img.replace(/(\.[a-zA-Z0-9]+)$/, `-768x429$1`)} 768w,${configData?.hero_img} 1024w`,
-        sizes: '100vw'
+        src: `${configData?.hero_img}`,
       }
     } else {
       window.__PAGE_CONFIG__ = configData;
@@ -387,7 +384,11 @@ defineOptions({
   }
 })
 
-const homeSettings = ref(null)
+const homeSettings = ref(
+  process.env.CLIENT && window.__PAGE_CONFIG__
+    ? window.__PAGE_CONFIG__
+    : null
+)
 const seoData = ref(null)
 
 // 3. APPLY META
@@ -525,6 +526,8 @@ onMounted(async() => {
       const freshConfig = await loadPageConfig('home', isPreview)
       if (freshConfig) homeSettings.value = freshConfig
     }
+
+    console.log(homeSettings.value)
 
 isHydrated.value = false
 
