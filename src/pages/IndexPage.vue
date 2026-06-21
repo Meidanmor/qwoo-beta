@@ -310,7 +310,7 @@ ingredient is ethically harvested at its peak potency.</p>
 <script setup>
 import { ref, onMounted, watch, computed, useSSRContext } from 'vue'
 import { useQuasar, useMeta } from 'quasar'
-import { useRoute } from 'vue-router' // Standard import is tiny
+import { useRoute, onBeforeRouteLeave } from 'vue-router' // Standard import is tiny
 import productsStore from 'src/stores/products'
 import { matStar } from '@quasar/extras/material-icons'
 //import { defineAsyncComponent } from 'vue'
@@ -581,7 +581,7 @@ watch(isHydrated, async (val) => {
 }, )
 
 
-watch(
+const stopProductsWatch = watch(
   [() => productsStore.products.value, () => $q.screen.name, () => homeSettings.value],
   () => {
     if (!isHydrated.value) return
@@ -589,6 +589,9 @@ watch(
     testimonialsCarousel.recompute(false)
   }
 )
+onBeforeRouteLeave(() => {
+  stopProductsWatch()
+})
 </script>
 
 <style scoped>
