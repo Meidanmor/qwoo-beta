@@ -11,92 +11,47 @@
       <!-- Product Images -->
       <div class="col-12 col-md-6">
         <div v-if="product?.images?.length > 1">
-          <q-carousel
-              @touchstart.stop
-            @mousedown.stop
-            animated
-            v-model="activeSlide"
-            height="400px"
-            :navigation="showCarouselControls"
-            autoplay
-            control-color="white"
-            swipeable
-            :infinite="showCarouselControls"
-            transition-prev="slide-right"
-            transition-next="slide-left"
-              :navigation-icon="matLens"
-          >
+            <AppCarousel
+                v-model="imagesCarousel.slide.value"
+                :carousel-key="imagesCarousel.carouselKey.value"
+                :show-controls="imagesCarousel.showControls.value"
+                :total="imagesCarousel.total.value"
+                :on-keydown="imagesCarousel.onKeydown"
+                v-if="product?.images?.length > 1"
+            >
             <q-carousel-slide
               v-for="(img, index) in product?.images"
               :key="index"
               :name="index"
-              :ratio="1"
-              fit="contain"
-              :img-src="img.src"
+              @mousedown="onImageMouseDown"
+              @mousemove="onImageMouseMove"
+              @click="onImageClick(index)"
+              style="cursor: zoom-in;max-height: 400px;object-fit: contain;"
+              >
+              <img
               :src="img.src"
               :srcset="img.srcset"
               :sizes="img.sizes"
-              @mousedown="onImageMouseDown"
-              @mousemove="onImageMouseMove"
-              @click="onImageClick(0)"
-              style="cursor: zoom-in"
+              height="400"
+              width="400"
+              style="cursor: zoom-in;max-height: 400px;object-fit: contain;"
             />
-              <!-- Keep the look: bind btnProps, add aria-label, keep visual style -->
-  <template v-if="showCarouselControls" #navigation-icon="{ name, onClick, btnProps }">
-    <q-btn
-      v-bind="btnProps"
-      :flat="false"
-      :color="activeSlide === name ? 'secondary' : 'primary'"
-      size="sm"
-      :icon="null"
-      style="background: var(--q-secondary); font-size: 5px;padding: 0"
-      round
-      dense
-      :aria-label="`Go to slide ${name + 1}`"
-      @click="onClick"
-    />
-  </template>
+            </q-carousel-slide>
+            </AppCarousel>
 
-  <!-- Custom arrows using q-carousel-control (positions match default) -->
-  <template v-if="showCarouselControls" #control>
-    <q-carousel-control position="left" class="flex items-center">
-      <q-btn
-        :icon="matChevronLeft"
-        aria-label="Previous slide"
-        flat
-        round
-        dense
-        color="secondary"
-        @click="activeSlide = (Number(activeSlide) - 1 + product?.images.length) % product?.images.length"
-      />
-    </q-carousel-control>
-
-    <q-carousel-control position="right" class="flex items-center">
-      <q-btn
-        :icon="matChevronRight"
-        aria-label="Next slide"
-        flat
-        round
-        dense
-        color="secondary"
-        @click="activeSlide = (Number(activeSlide) + 1) % product?.images.length"
-      />
-    </q-carousel-control>
-  </template>
-
-          </q-carousel>
         </div>
+
         <div v-else>
-          <q-img
-            :img-src="product.images[0]?.src"
+          <img
             :src="product.images[0]?.src ? product.images[0].src : '/naturaBloom-circle.svg'"
             :srcset="product.images[0]?.srcset"
             :sizes="product.images[0]?.sizes"
-            spinner-color="secondary"
             fetchpriority="high"
             loading="eager"
             fit="contain"
             style="cursor: zoom-in; max-height: 500px"
+            height="400"
+            width="400"
   @mousedown="onImageMouseDown"
   @mousemove="onImageMouseMove"
   @click="onImageClick(0)"
@@ -171,7 +126,7 @@
         <div v-else-if="product.is_in_stock">
         <!-- Quantity Selector -->
         <div class="row items-center q-mb-md">
-          <q-btn flat round :icon="matRemove" @click="decreaseQty" />
+          <q-btn aria-label="Decrease quantity" flat round :icon="matRemove" @click="decreaseQty" />
           <q-input
             v-model.number="quantity"
             type="number"
@@ -180,7 +135,7 @@
             style="width: 60px; text-align: center"
             :aria-label="`Quantity for ${product.name}`"
           />
-          <q-btn flat round :icon="matAdd" @click="increaseQty" />
+          <q-btn aria-label="Increase quantity" flat round :icon="matAdd" @click="increaseQty" />
         </div>
 
         <q-btn
@@ -250,18 +205,16 @@ import {
   matFavorite,
   matAdd,
   matRemove,
-  matLens,
   matArrowDropDown,
-  matChevronLeft,
-  matChevronRight,
   matCancel
 } from '@quasar/extras/material-icons'
 import LightboxGallery from 'src/components/LightboxGallery.vue'
+import AppCarousel from 'src/components/AppCarousel.vue'
+import {useCarousel} from '/src/composables/useCrousel.js'
 
 const $q = useQuasar()
 const route = useRoute()
 const product = ref(null)
-const activeSlide = ref(0)
 const quantity = ref(1)
 const getSlugFromPermalink = (permalink) => {
   const match = permalink.match(/product\/([^/]+)\/?$/)
@@ -284,16 +237,17 @@ if (process.env.CLIENT) {
   }
 }
 
-const showCarouselControls = computed(() => {
-  return product.value.images.length > 1
-})
+const isHydrated = ref(process.env.CLIENT)
 
+const imagesCarousel = useCarousel(
+  async () => product.value?.images,
+    {isHydrated}
+)
 
 // 🟢 Run on SSR only
 // Inside your Page or Layout
 defineOptions({
   async preFetch ({ ssrContext, currentRoute }) {
-    console.log('--- PreFetch Running for:', currentRoute.params.slug)
     // FETCH DATA: This is the key change
     const seo = await fetchSeoForPath(currentRoute.path)
 
@@ -301,7 +255,6 @@ defineOptions({
     if (ssrContext) {
       let productData = await productsStore.fetchSingleProduct(currentRoute.params.slug)
 
-      console.log(productData)
 // ✅ Normalize categories on SSR
       if (productData && !productData?.categories?.length) {
         productData.categories = [
@@ -351,11 +304,6 @@ if (window.__SEO_DATA__) {
   })
 }
 
-// Log for debugging
-if (process.env.SERVER) {
-  console.log('[SSR] ProductPage loaded on server')
-}
-
 function getOptionsWithDisabled(attribute) {
   // Get all original options for this attribute
   const allOptions = product.value.attributes
@@ -368,7 +316,6 @@ function getOptionsWithDisabled(attribute) {
   }))
 }
 
-//const addToCartLoading = ref(false);
 const availableAttributes = computed(() => {
   if (!product.value?.attributes) return []
 
@@ -430,15 +377,13 @@ function openLightbox(index) {
 const openDrawer = ref(true);
 function addToCart(e) {
   handleAddToCart(e)
-  console.log('Cart:', cart.state)
 }
 function handleAddToCart(e) {
-  if(e && e.target.innerText == 'QUICK CHECKOUT') {
+  if (e && e.target.innerText == 'QUICK CHECKOUT') {
     cart.state.loading.quickbuy = true;
     openDrawer.value = false;
 
   }
-  console.log(e.target.innerText);
   const matchedVariation = product.value.variations.find((variation) => {
     return Object.entries(selectedVariations.value).every(([attrName, selectedValue]) => {
       const attr = variation.attributes.find(a => a.name === attrName);
@@ -450,18 +395,14 @@ function handleAddToCart(e) {
 
   console.log(matchedVariation);
   if (!matchedVariation) {
-    console.log(product.value.id);
-    //alert('No matching variation found');
     cart.add(product.value.id, quantity.value, null, null, $q, '', openDrawer.value);
     return;
   }
 
   const selectedVariationsArray = {};
   selectedVariationsArray.variation = [];
-  console.log(selectedVariations.value);
 
-  for (const [key, value] of Object.entries(matchedVariation.attributes)) {
-    console.log(key, value)
+  for (const [value] of Object.entries(matchedVariation.attributes)) {
     let resolvedValue = value.value
 
     if (resolvedValue === null || resolvedValue === 'null' || !resolvedValue) {
@@ -473,7 +414,6 @@ function handleAddToCart(e) {
       value: resolvedValue
     })
   }
-  console.log(product.value.id + '-' + 1 + '-' + matchedVariation.id + '-' + selectedVariationsArray.variation);
   cart.add(product.value.id, quantity.value, matchedVariation.id, selectedVariationsArray.variation, $q, '', openDrawer.value);
 }
 function increaseQty() {
@@ -509,11 +449,8 @@ async function enhanceProduct() {
   }
 
   quantity.value = 1
-  activeSlide.value = 0
 
   await resetVariations()
-console.log('route.query:', route.query)
-console.log('product attributes:', product.value?.attributes)
 
   // Auto-select from URL query params if present and valid
   const query = route.query
@@ -560,15 +497,13 @@ async function fetchWishlistData() {
 
   await wishlist.fetchWishlistItems();
 
-//console.log(cart.state.items.wishlist);
-if(wishlist.state.items && Object.values(wishlist.state.items).find(obj => selectedVariation.value ? selectedVariation.value.id : product.value.id === obj.id)){
+  if (wishlist.state.items && Object.values(wishlist.state.items).find(obj => selectedVariation.value ? selectedVariation.value.id : product.value.id === obj.id)) {
     wishlistAdded.value = true
-  } else{
+  } else {
     wishlistAdded.value = false
   }
 
-//console.log(wishlistAdded.value);
- }
+}
 
 async function onVariationChange() {
   // Clear any selected values that are no longer valid
@@ -582,11 +517,6 @@ async function onVariationChange() {
     selectedVariation.value = null
     return
   }
-
-  console.log('Selected Variations:', selectedVariations.value)
-  console.log('Available Variations:', product.value.variations)
-
-  console.log(product.value.variations);
 
   matchedVariation.value = product.value.variations.find((variation) => {
     return Object.entries(selectedVariations.value).every(([attrName, selectedValue]) => {
@@ -602,10 +532,8 @@ async function onVariationChange() {
       return attr.value.toLowerCase() === selectedValue.toLowerCase();
     });
   });
-  console.log(Object.keys(selectedVariations.value).length);
 
   if (matchedVariation.value) {
-    console.log(Object.keys(matchedVariation.value.attributes).length)
 
     if (Object.keys(matchedVariation.value.attributes).length == Object.keys(selectedVariations.value).length) {
       selectedVariation.value = matchedVariation.value
@@ -617,8 +545,7 @@ async function onVariationChange() {
   }
 
 
-  for (const [key, value] of Object.entries(selectedVariations.value)) {
-    console.log(`${key}: ${value}`);
+  for (const [value] of Object.entries(selectedVariations.value)) {
     if (value == null) {
       selectedVariation.value = null
     }
@@ -633,19 +560,17 @@ async function onVariationChange() {
   for (const [key, value] of Object.entries(selectedVariations.value)) {
     if (value) query[key] = value
   }
-const url = new URL(window.location.href)
-url.search = '' // clear all existing params first
-for (const [k, v] of Object.entries(selectedVariations.value)) {
-  if (v) url.searchParams.set(k, v)
-}
-window.history.replaceState({}, '', url.toString())
-  console.log(selectedVariation.value);
+  const url = new URL(window.location.href)
+  url.search = '' // clear all existing params first
+  for (const [k, v] of Object.entries(selectedVariations.value)) {
+    if (v) url.searchParams.set(k, v)
+  }
+  window.history.replaceState({}, '', url.toString())
 
 }
 
 function addToCartHandler(e) {
   if (isVariable.value) {
-  console.log(selectedVariation.value);
     if (!selectedVariation.value) {
       variationError.value = 'Please select all variation options.'
       return
@@ -662,21 +587,12 @@ if(selectedVariation.value){
 } else {
   await wishlist.toggleWishlistItem(product.value.id, $q);
 }
-if(wishlist.state.items) {
-  console.log(Object.values(wishlist.state.items).find(obj => selectedVariation.value ? selectedVariation.value.id : product.value.id === obj.id));
-
-  console.log(cart.state.items);
-  console.log(cart.state.items.length);
-}
 
   if (wishlist.state.items && Object.values(wishlist.state.items).find(obj => selectedVariation.value ? selectedVariation.value.id : product.value.id === obj.id)) {
     wishlistAdded.value = false;
   } else{
     wishlistAdded.value = true;
   }
-
-console.log(selectedVariation.value ? selectedVariation.value.id : product.value.id);
-  console.log(wishlistAdded.value);
 }
 onMounted(async() => {
   if (process.env.CLIENT) {
@@ -684,8 +600,12 @@ onMounted(async() => {
   if (!product.value || !product.value.id) {
     await fetchProduct(route.params.slug)
     await enhanceProduct();
+    await imagesCarousel.recompute(true)  // add this
+
   } else {
     enhanceProduct();
+    imagesCarousel.recompute(true)  // add this
+
   }
     console.log('PWA Shell detected: Fetching SEO data from API...')
     try {
@@ -721,11 +641,12 @@ watch(
     selectedVariations.value = {}
     variationError.value = ''
     quantity.value = 1
-    activeSlide.value = 0
 
     //await fetchProduct(newSlug)
 
     enhanceProduct().catch(console.error)
+    imagesCarousel.recompute(true)  // add this
+
     fetchSeoForPath(`product/${newSlug}`)
       .then(data => seoData.value = data)
   }
