@@ -203,6 +203,7 @@ import GoogleLoginButton from 'src/components/GoogleLoginButton.vue';
 import { loadPageConfig } from 'src/utils/config-loader'
 import { matError } from '@quasar/extras/material-icons'
 import {formatCurrency} from 'src/utils/formatters.js'
+import { getWasLoggedIn } from 'src/composables/useApiFetch.js'
 
 defineOptions({
   async preFetch ({ ssrContext, currentRoute }) {
@@ -256,26 +257,11 @@ if (process.env.SERVER) {
 
 
 const syncError = ref(null);
-const token = ref('');
-if(process.env.CLIENT) {
-  token.value = localStorage.getItem('jwt_token');
-}
-/*defineOptions({
-  async preFetch () {
-    try {
-      // Force the blocking sync here so the state is
-      // already populated when the component renders
-      const cartFetch = await cart.fetchCartOnce(true)
-      console.log(cartFetch);
-    } catch (err) {
-      console.error('PreFetch sync failed:', err)
-    }
-  }
-})*/
+
 const checkoutReady = computed(() => {
   return !!displayCart.value
 })
-const isLoggedIn = ref(!!token.value)
+const isLoggedIn = ref(false)
 const router = useRouter();
 
 // 2. FORM INITIALIZATION: Do it immediately based on the store
@@ -298,23 +284,6 @@ const form = reactive({
   }
 });
 
-// 3. COMPUTED OPTIONS: Make shipping and payment methods computed
-// so they react instantly to the cart_array fetched in preFetch
-/*const shippingOptions = computed(() => {
-  const rates = cart.state.cart_array?.shipping_rates?.[0]?.shipping_rates || [];
-  return rates.map(rate => ({
-    label: `${rate.name} – ${formatCurrency(rate.price, { minorUnit: 2, prefix: '₪' })}`,
-    value: rate.rate_id
-  }));
-});*/
-
-/*const paymentMethods = computed(() => {
-  const methods = cart.state.cart_array?.payment_methods || [];
-  return methods.map(method => ({
-    label: method === 'bacs' ? 'Bank transfer' : method,
-    value: method
-  }));
-});*/
 // Replace cart_array references for display with this
 const displayCart = computed(() => {
   if (cart.state.cart_array) return cart.state.cart_array
@@ -456,13 +425,7 @@ const updateShippingAddress = async () => {
     console.error('Error updating shipping address:', error.message);
   }
 };
-/*const handleInputBlur = (field) => {
-  const value = form.shipping[field] ? form.shipping[field] : form[field];
-  if (value && value.length > 1) {
-    updateShippingAddress();
-    fetchShippingRates();
-  }
-};*/
+
 const saveFormToLocalStorage = () => {
   localStorage.setItem('checkout_form', JSON.stringify({
     first_name: form.first_name,
@@ -489,17 +452,6 @@ const removeCoupon = (coupon) => cart.removeCoupon(coupon);
 // Fetch shipping methods
 const fetchShippingRates = async () => {
   if (!cart.state.cart_array) return
-
-  //const rates = cart.state.cart_array.shipping_rates?.[0]?.shipping_rates || []
-
-  /*shippingOptions.value = rates.map(rate => ({
-    label: `${rate.name} – ${formatCurrency(rate.price, {
-      minorUnit: 2,
-      decimalSeparator: '.',
-      prefix: '₪'
-    })}`,
-    value: rate.rate_id
-  }))*/
 
   if (shippingOptions.value.length) {
     selectedShippingRateId.value ??= shippingOptions.value[0].value
@@ -638,6 +590,8 @@ watch(
 )
 
 onMounted(async () => {
+  isLoggedIn.value = getWasLoggedIn()
+
   console.log('LOCAL CART', cart.state.local_cart)
   if (window.__CART_ARRAY__ && !cart.state.cart_array && !cart.state.offline) {
     cart.state.cart_array = window.__CART_ARRAY__
@@ -659,28 +613,15 @@ onMounted(async () => {
       await cart.syncLocalCartWithServer()
     }
     // Only fetch after sync is complete so we never show stale data
-    await cart.fetchCart()
+
+    if (!cart.state.cart_array) {
+      await cart.fetchCart()
+    }
   }
   if (window.__PAGE_CONFIG__ && Object.keys(window.__PAGE_CONFIG__).length) {
     pageConfig.value = window.__PAGE_CONFIG__
   }
-  // Start the loading state
-  /*checkoutReady.value = false;
 
-  try {
-    // We call fetchCartOnce with 'true' to force a blocking sync
-    // This ensures cart_array is 100% accurate before we proceed
-    //await cart.fetchCartOnce(true);
-
-    // Now that the server and local are identical:
-    await initializeFormFromCart();
-    await fetchShippingRates();
-
-    checkoutReady.value = true;
-  } catch (err) {
-    console.error('Initial sync failed:', err);
-    syncError.value = "Could not sync your cart. Please check your connection.";
-  }*/
 });
 </script>
 
