@@ -634,7 +634,7 @@ onMounted(async () => {
     const fallbackTimer = setTimeout(() => {
       cleanup()
       scheduler()
-    }, 3000)
+    }, 5000)
 
     window.addEventListener('scroll', scheduler, { passive: true })
     window.addEventListener('mousemove', scheduler, { passive: true })
