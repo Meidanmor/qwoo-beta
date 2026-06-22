@@ -259,6 +259,13 @@ const syncError = ref(null);
 const token = ref('');
 if(process.env.CLIENT) {
   token.value = localStorage.getItem('jwt_token');
+  // Hydrate cart immediately from SSR-injected data,
+  // before first render so the spinner never flashes
+  if (window.__CART_ARRAY__ && !cart.state.cart_array) {
+    cart.state.cart_array = window.__CART_ARRAY__;
+    cart.state.synced = true;
+    window.__CART_ARRAY__ = null;
+  }
 }
 /*defineOptions({
   async preFetch () {
@@ -639,7 +646,7 @@ watch(
 
 onMounted(async () => {
   console.log('LOCAL CART', cart.state.local_cart)
-  if (window.__CART_ARRAY__ && !cart.state.cart_array && !cart.state.offline) {
+  /*if (window.__CART_ARRAY__ && !cart.state.cart_array && !cart.state.offline) {
     cart.state.cart_array = window.__CART_ARRAY__
     cart.state.synced = true
     window.__CART_ARRAY__ = null
@@ -653,14 +660,14 @@ onMounted(async () => {
     if (cart.needsSync()) {
       await cart.syncLocalCartWithServer()
     }
-  } else {
+  } else {*/
     await cart.loadLocalCart()
     if (cart.needsSync()) {
       await cart.syncLocalCartWithServer()
     }
     // Only fetch after sync is complete so we never show stale data
     await cart.fetchCart()
-  }
+  //}
   if (window.__PAGE_CONFIG__ && Object.keys(window.__PAGE_CONFIG__).length) {
     pageConfig.value = window.__PAGE_CONFIG__
   }

@@ -89,7 +89,7 @@ const columns = [
 ]
 
 onMounted(async () => {
-const res = await fetchWithToken(`${import.meta.env.VITE_API_BASE}/wp-json/wc/store/v1/my-orders`);
+const res = await fetchWithToken(`${import.meta.env.VITE_API_BASE}/wp-json/qwoo/v1/my-orders`);
 
 orders.value = await res.json();
 console.log(orders);

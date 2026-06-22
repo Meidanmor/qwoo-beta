@@ -69,7 +69,7 @@ export async function fetchAdminProducts(params = {}) {
   }
 
   try {
-    const url = `${API_BASE}/wp-json/store/admin-products?${buildQuery()}`
+    const url = `${API_BASE}/wp-json/qwoo/v1/admin-products?${buildQuery()}`
 
     const [productsRes] = await Promise.all([
       fetchWithToken(url, { credentials: 'include' }),

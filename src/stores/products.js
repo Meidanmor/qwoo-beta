@@ -404,7 +404,7 @@ async function prefetchCategories() {
 
 async function prefetchPriceMeta(cat = null) {
   try {
-    let url = `${import.meta.env.VITE_API_BASE}/wp-json/wc/store/products-meta`
+    let url = `${import.meta.env.VITE_API_BASE}/wp-json/qwoo/v1/products-meta`
     console.log('category is:', cat)
     if (cat) {
       url += `?category=${cat}`

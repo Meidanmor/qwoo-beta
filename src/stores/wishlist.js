@@ -6,7 +6,7 @@ import { matFavorite } from '@quasar/extras/material-icons'
 /* -------------------------
    Constants
    ------------------------- */
-const API_BASE = import.meta.env.VITE_STORE_API_BASE
+const API_BASE = import.meta.env.VITE_API_BASE
 const DEBUG = import.meta.env.DEV
 
 /* -------------------------
@@ -105,7 +105,7 @@ async function fetchWishlistItems() {
 
   state.loading = true
   try {
-    const res = await fetchWithToken(`${API_BASE}/wishlist/`, {
+    const res = await fetchWithToken(`${API_BASE}/wp-json/qwoo/v1/wishlist/`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -180,7 +180,7 @@ async function toggleWishlistItem(productId, $q = null) {
     persist()
 
     // Sync with backend
-    const res = await fetchWithToken(`${API_BASE}/wishlist/`, {
+    const res = await fetchWithToken(`${API_BASE}/wp-json/qwoo/v1/wishlist/`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

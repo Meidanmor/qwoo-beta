@@ -92,7 +92,7 @@ const sendMessage = async () => {
   scrollToBottom()
 
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE}/wp-json/ai-chat/v1/message`, {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE}/wp-json/qwoo/v1/ai-chat/message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: userText })

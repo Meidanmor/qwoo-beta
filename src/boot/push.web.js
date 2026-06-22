@@ -62,7 +62,7 @@ export async function subscribeToWebPush() {
       subscription: subscription
     }
 
-    const res = await fetch(`${import.meta.env.VITE_API_BASE}/wp-json/pwa/v1/save-subscription`, {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE}/wp-json/qwoo/v1/pwa/save-subscription`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -100,7 +100,7 @@ async function syncSubscriptionCartToken() {
   if (!cartToken || !deviceId) return
   try {
     // Send the stable deviceId and the volatile cartToken
-    await fetch(`${import.meta.env.VITE_API_BASE}/wp-json/pwa/v1/update-cart-token`, {
+    await fetch(`${import.meta.env.VITE_API_BASE}/wp-json/qwoo/v1/pwa/update-cart-token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       keepalive: true,

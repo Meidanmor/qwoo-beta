@@ -18,7 +18,7 @@ export async function fetchSeoForPath(path) {
 
   try {
     const res = await fetch(
-      `${API_BASE}/wp-json/custom/v1/seo?path=${encodeURIComponent(path)}`
+      `${API_BASE}/wp-json/qwoo/v1/seo?path=${encodeURIComponent(path)}`
     )
 
     if (!res.ok) return result
