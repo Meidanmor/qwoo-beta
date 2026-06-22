@@ -401,16 +401,20 @@ const initializeFormFromCart = async () => {
   const cartData = displayCart.value
   if (!cartData) return
 
-  const saved = localStorage.getItem('checkout_form')
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved)
-      Object.assign(form, parsed)
-      return
-    } catch (err) {
-      console.error('error', err)
+  // Guard localStorage — only available on client
+  if (process.env.CLIENT) {
+    const saved = localStorage.getItem('checkout_form')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        Object.assign(form, parsed)
+        return
+      } catch (err) {
+        console.error('error', err)
+      }
     }
   }
+
 
   const billing = cartData.billing_address || {}
   const shipping = cartData.shipping_address || {}
@@ -649,7 +653,6 @@ watch(
 )
 
 onMounted(async () => {
-  isLoggedIn.value = getWasLoggedIn()
 
   console.log('LOCAL CART', cart.state.local_cart)
   /*if (window.__CART_ARRAY__ && !cart.state.cart_array && !cart.state.offline) {
@@ -667,12 +670,15 @@ onMounted(async () => {
       await cart.syncLocalCartWithServer()
     }
   } else {*/
-    await cart.loadLocalCart()
-    if (cart.needsSync()) {
-      await cart.syncLocalCartWithServer()
-    }
-    // Only fetch after sync is complete so we never show stale data
+  isLoggedIn.value = getWasLoggedIn()
+
+  await cart.loadLocalCart()
+
+  if (cart.needsSync()) {
+    await cart.syncLocalCartWithServer()
+  } else if (!cart.state.cart_array) {
     await cart.fetchCart()
+  }
   //}
   if (window.__PAGE_CONFIG__ && Object.keys(window.__PAGE_CONFIG__).length) {
     pageConfig.value = window.__PAGE_CONFIG__
