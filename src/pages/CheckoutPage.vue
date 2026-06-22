@@ -203,27 +203,21 @@ import GoogleLoginButton from 'src/components/GoogleLoginButton.vue';
 import { loadPageConfig } from 'src/utils/config-loader'
 import { matError } from '@quasar/extras/material-icons'
 import {formatCurrency} from 'src/utils/formatters.js'
-import { getWasLoggedIn } from 'src/composables/useApiFetch.js'
-
 
 defineOptions({
   async preFetch ({ ssrContext, currentRoute }) {
     let cartData;
-    if (ssrContext) {
-      // SSR: fetch with context so the response gets injected into the HTML
+    if(ssrContext) {
       cartData = await cart.fetchCart(true, ssrContext)
-    } else {
-      // Client-side navigation: always get fresh cart so nothing stale shows
-      if (cart.needsSync()) {
-        await cart.syncLocalCartWithServer()
+    } else if(cart.needsSync()) {
+      cartData = await cart.syncLocalCartWithServer()
+    }
+     //const seo = await fetchSeoForPath('checkout')
+      const seo = {
+        title: 'Checkout',
+        description: 'Checkout page',
+        robots: 'noindex, follow'
       }
-      cartData = await cart.fetchCart()
-    }
-    const seo = {
-      title: 'Checkout',
-      description: 'Checkout page',
-      robots: 'noindex, follow'
-    }
     const isPreview = currentRoute.query.preview === 'true'
 
     const configData = await loadPageConfig('checkout', isPreview) // The helper we'll create
@@ -262,14 +256,9 @@ if (process.env.SERVER) {
 
 
 const syncError = ref(null);
+const token = ref('');
 if(process.env.CLIENT) {
-  // Hydrate cart immediately from SSR-injected data,
-  // before first render so the spinner never flashes
-  if (window.__CART_ARRAY__ && !cart.state.cart_array) {
-    cart.state.cart_array = window.__CART_ARRAY__;
-    cart.state.synced = true;
-    window.__CART_ARRAY__ = null;
-  }
+  token.value = localStorage.getItem('jwt_token');
 }
 /*defineOptions({
   async preFetch () {
@@ -286,7 +275,7 @@ if(process.env.CLIENT) {
 const checkoutReady = computed(() => {
   return !!displayCart.value
 })
-const isLoggedIn = ref(false)
+const isLoggedIn = ref(!!token.value)
 const router = useRouter();
 
 // 2. FORM INITIALIZATION: Do it immediately based on the store
@@ -401,20 +390,16 @@ const initializeFormFromCart = async () => {
   const cartData = displayCart.value
   if (!cartData) return
 
-  // Guard localStorage — only available on client
-  if (process.env.CLIENT) {
-    const saved = localStorage.getItem('checkout_form')
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved)
-        Object.assign(form, parsed)
-        return
-      } catch (err) {
-        console.error('error', err)
-      }
+  const saved = localStorage.getItem('checkout_form')
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved)
+      Object.assign(form, parsed)
+      return
+    } catch (err) {
+      console.error('error', err)
     }
   }
-
 
   const billing = cartData.billing_address || {}
   const shipping = cartData.shipping_address || {}
@@ -648,13 +633,13 @@ watch(
     if (!cartData) return
     initializeFormFromCart()
     fetchShippingRates()
-  }
+  },
+  { immediate: true }
 )
 
 onMounted(async () => {
-
   console.log('LOCAL CART', cart.state.local_cart)
-  /*if (window.__CART_ARRAY__ && !cart.state.cart_array && !cart.state.offline) {
+  if (window.__CART_ARRAY__ && !cart.state.cart_array && !cart.state.offline) {
     cart.state.cart_array = window.__CART_ARRAY__
     cart.state.synced = true
     window.__CART_ARRAY__ = null
@@ -668,21 +653,14 @@ onMounted(async () => {
     if (cart.needsSync()) {
       await cart.syncLocalCartWithServer()
     }
-  } else {*/
-  isLoggedIn.value = getWasLoggedIn()
-
-  // Safe to touch localStorage here — hydration is already complete
-  await initializeFormFromCart()
-  fetchShippingRates()
-
-  await cart.loadLocalCart()
-  if (cart.needsSync()) {
-    await cart.syncLocalCartWithServer()
-  } else if (!cart.state.cart_array) {
+  } else {
+    await cart.loadLocalCart()
+    if (cart.needsSync()) {
+      await cart.syncLocalCartWithServer()
+    }
+    // Only fetch after sync is complete so we never show stale data
     await cart.fetchCart()
   }
-
-  //}
   if (window.__PAGE_CONFIG__ && Object.keys(window.__PAGE_CONFIG__).length) {
     pageConfig.value = window.__PAGE_CONFIG__
   }
