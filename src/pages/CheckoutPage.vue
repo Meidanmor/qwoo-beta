@@ -648,8 +648,7 @@ watch(
     if (!cartData) return
     initializeFormFromCart()
     fetchShippingRates()
-  },
-  { immediate: true }
+  }
 )
 
 onMounted(async () => {
@@ -672,13 +671,17 @@ onMounted(async () => {
   } else {*/
   isLoggedIn.value = getWasLoggedIn()
 
-  await cart.loadLocalCart()
+  // Safe to touch localStorage here — hydration is already complete
+  await initializeFormFromCart()
+  fetchShippingRates()
 
+  await cart.loadLocalCart()
   if (cart.needsSync()) {
     await cart.syncLocalCartWithServer()
   } else if (!cart.state.cart_array) {
     await cart.fetchCart()
   }
+
   //}
   if (window.__PAGE_CONFIG__ && Object.keys(window.__PAGE_CONFIG__).length) {
     pageConfig.value = window.__PAGE_CONFIG__
