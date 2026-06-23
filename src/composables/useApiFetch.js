@@ -1,5 +1,4 @@
 let authExpiredTriggered = false
-let wasLoggedIn = false
 
 export function getWasLoggedIn() {
   if (typeof window === 'undefined') return false // SSR safe
@@ -33,7 +32,12 @@ export async function fetchWithToken(url, options = {}) {
       url.includes('wp-json') ||
       !url.match(/\.(js|css|woff2?|png|jpg)$/)
 
-    if (isDataRequest && wasLoggedIn && !authExpiredTriggered) {
+    /*if (isDataRequest && wasLoggedIn && !authExpiredTriggered) {
+      authExpiredTriggered = true
+      window.dispatchEvent(new CustomEvent('auth-expired'))
+    }*/
+    // ✅ Read from localStorage instead of the stale in-memory variable
+    if (isDataRequest && getWasLoggedIn() && !authExpiredTriggered) {
       authExpiredTriggered = true
       window.dispatchEvent(new CustomEvent('auth-expired'))
     }
