@@ -49,7 +49,7 @@
     </q-card>
 
     </div>
-    <div v-else-if="orders && orders.length === 0">No orders yet. <router-link to="products">explore our products</router-link> to start your first order!</div>
+    <div v-else-if="orders && orders.length === 0">No orders yet. <router-link to="/products/">explore our products</router-link> to start your first order!</div>
     <div v-else> <q-spinner color="secondary" size="2em" /> </div>
   </div>
 </template>

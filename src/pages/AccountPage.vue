@@ -98,13 +98,11 @@ onMounted(async () => {
   if (sessionChecked) return
   sessionChecked = true
 
-  console.log(document.cookie)
   if (!getWasLoggedIn()) {
-    sessionLoading.value = false  // show login form immediately
+    sessionLoading.value = false
     return
   }
 
-  // cookie exists → verify session is still valid
   try {
     const res = await fetchWithToken(`${API}/wp-json/qwoo/v1/me`)
     if (res.ok) {
@@ -113,9 +111,16 @@ onMounted(async () => {
       cart.state.user  = data.user
       setLoggedIn(true)
       isLoggedIn.value = true
+    } else {
+      // ✅ Session is gone — clean up and show login form
+      setLoggedIn(false)       // clears localStorage so auth-expired won't fire
+      cart.state.user = {}
+      cart.clear()
+      // isLoggedIn stays false → login form shows automatically
     }
   } catch (err) {
     console.error('Session check failed:', err)
+    setLoggedIn(false)         // also clean up on network error
   } finally {
     sessionLoading.value = false
   }
