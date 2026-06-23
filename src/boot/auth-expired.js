@@ -21,7 +21,7 @@ export function initAuthPopup(router) {
       noEscDismiss: true,
       noBackdropDismiss: true
     }).onOk(() => {
-      router.push('/my-account')
+      window.location.href = '/my-account'  // hard reload instead of router.push
     })
   })
 }
