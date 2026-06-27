@@ -3,7 +3,7 @@ import { Dialog } from 'quasar'
 
 let shown = false
 
-export function initAuthPopup(router) {
+export function initAuthPopup() {
   if (typeof window === 'undefined') return
 
   window.addEventListener('auth-expired', () => {
