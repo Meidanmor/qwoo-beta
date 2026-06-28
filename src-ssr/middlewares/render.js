@@ -104,15 +104,15 @@ export default defineSsrMiddleware(({ app, resolve, render, /*serve*/ }) => {
 
     ${schemaHtml}
 
-    ${heroData.src ? `
-      <link 
-        rel="preload" 
-        as="image" 
-        href="${heroData?.src}" 
-        imagesrcset="${heroData?.srcset}" 
-        imagesizes="${heroData?.sizes}" 
-        fetchpriority="high"
-      >` : ''}
+${heroData.src ? `
+  <link 
+    rel="preload" 
+    as="image" 
+    href="${heroData.src}" 
+    ${heroData.srcset ? `imagesrcset="${heroData.srcset}"` : ''}
+    ${heroData.sizes ? `imagesizes="${heroData.sizes}"` : ''}
+    fetchpriority="high"
+  >` : ''}
     <style>
       .hero-section-sec, .lcp-wrapper, .hero-img, .q-layout, .q-page-container, #q-app {
         opacity: 1 !important;

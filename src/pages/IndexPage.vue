@@ -4,12 +4,12 @@
       <img
         fetchpriority="high"
         loading="eager"
-        decoding="async"
+        decoding="sync"
         alt="Homepage hero image"
         :src="`${homeSettings?.hero_img}`"
         sizes="100vw"
-        width="300"
-        height="200"
+        width="1367"
+        height="768"
         class="hero-img"
       />
   <div class="hero-section container hero-margin row">
