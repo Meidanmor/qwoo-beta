@@ -33,9 +33,12 @@
               :srcset="img.srcset"
               :sizes="img.sizes"
               :alt="`${product.name} image ${index}`"
+              :loading="index === 0 ? 'eager' : 'lazy'"
+              :fetchpriority="index === 0 ? 'high' : 'auto'"
+              :decoding="index === 0 ? 'sync' : 'async'"
               height="400"
               width="400"
-              style="cursor: zoom-in;max-height: 400px;object-fit: contain;"
+              style="cursor: zoom-in;max-height: 400px;object-fit: contain;margin:0 auto;"
             />
             </q-carousel-slide>
             </AppCarousel>
@@ -242,7 +245,10 @@ const isHydrated = ref(process.env.CLIENT)
 
 const imagesCarousel = useCarousel(
   async () => product.value?.images,
-    {isHydrated}
+    {
+      isHydrated,
+      chunkSizes: { xs: 1, sm: 1, md: 1 }
+    }
 )
 
 // 🟢 Run on SSR only
@@ -646,6 +652,7 @@ watch(
     //await fetchProduct(newSlug)
 
     enhanceProduct().catch(console.error)
+    imagesCarousel.slide.value = 0
     imagesCarousel.recompute(true)  // add this
 
     fetchSeoForPath(`product/${newSlug}`)

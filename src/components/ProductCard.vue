@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/product/${getSlugFromPermalink(product.permalink)}`">
+  <router-link class="relative-position" :to="`/product/${getSlugFromPermalink(product.permalink)}`">
           <div class="item-loop-wl absolute">
               <q-btn aria-label="Remove from wishlist" class="text-black q-pa-none text-caption q-mt-sm" flat :loading="wishlist.state.loading" v-if="wishlist.state.items && Object.values(wishlist.state.items).find(obj => product.id === obj.id)" @click.prevent="addToWishlist(product.id)" color="accent" :icon="matFavorite" />
               <q-btn aria-label="Add to wishlist" class="text-black q-pa-none text-caption q-mt-sm" flat :loading="wishlist.state.loading" v-else @click.prevent="addToWishlist(product.id)" color="accent" :icon="matFavoriteBorder" />
@@ -7,7 +7,7 @@
       <div
     v-if="!product.is_in_stock"
     class="absolute q-ma-sm"
-    style="z-index: 3; top: 25px; left: 20px;"
+    style="z-index: 3; top: 11px; left: 10px;"
   >
     <q-badge
       color="grey-8"
@@ -18,7 +18,7 @@
           <div
     v-if="product.is_in_stock && product.on_sale"
     class="absolute q-ma-sm"
-    style="z-index: 3; top: 25px; left: 20px;"
+    style="z-index: 3; top: 11px; left: 10px;"
   >
     <q-badge
       color="grey-8"

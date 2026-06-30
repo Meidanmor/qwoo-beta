@@ -292,13 +292,13 @@ i.q-icon.on-left.notranslate.material-icons {
 
 .item-loop-wl.absolute {
     z-index: 1;
-    top: 20px;
-    right: 27px;
+    top: 7px;
+    right: 17px;
 }
 
 .item-loop-wl.absolute span.q-btn__content i {
     background: #f6f2e7;
-    border: 1px solid var(--q-primary);
+    border: none;
     border-radius: 50%;
     padding: 2px;
     transition: 0.3s ease;

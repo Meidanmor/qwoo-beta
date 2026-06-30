@@ -3,11 +3,16 @@ import { ref, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useCarouselKeyboard } from './useCarouselKeyboard'
 
-export function useCarousel(getItems, { isHydrated }) {
+const defaultChunkSizes = { xs: 1, sm: 2, md: 3 }
+
+export function useCarousel(getItems, { isHydrated, chunkSizes = defaultChunkSizes } = {}) {
   const $q = useQuasar()
   const slide = ref(0)
   const carouselKey = ref(0)
   const slideChunks = ref([])
+
+  // If the caller doesn't care about a hydration/readiness gate, default to "always ready"
+  const ready = isHydrated ?? ref(true)
 
   const getChunks = (array, size) => {
     if (!Array.isArray(array) || !array.length) return []
@@ -17,9 +22,13 @@ export function useCarousel(getItems, { isHydrated }) {
   }
 
   const recompute = async (forceRemount = false) => {
-    if (!isHydrated.value) return
+    if (!ready.value) return
     const items = await getItems()
-    const chunkSize = $q.screen.lt.sm ? 1 : $q.screen.lt.md ? 2 : 3
+    const chunkSize = $q.screen.lt.sm
+        ? chunkSizes.xs
+        : $q.screen.lt.md
+            ? chunkSizes.sm
+            : chunkSizes.md
     if (forceRemount) carouselKey.value++
     slideChunks.value = getChunks(items, chunkSize)
   }
