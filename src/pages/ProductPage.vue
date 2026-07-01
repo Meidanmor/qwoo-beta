@@ -406,20 +406,19 @@ function handleAddToCart(e) {
     return;
   }
 
-  const selectedVariationsArray = {};
-  selectedVariationsArray.variation = [];
+  const selectedVariationsArray = { variation: [] };
 
-  for (const [value] of Object.entries(matchedVariation.attributes)) {
-    let resolvedValue = value.value
+  for (const attr of matchedVariation.attributes) {
+    let resolvedValue = attr.value;
 
     if (resolvedValue === null || resolvedValue === 'null' || !resolvedValue) {
-      resolvedValue = selectedVariations.value[value.name] ?? ''
+      resolvedValue = selectedVariations.value[attr.name] ?? '';
     }
 
     selectedVariationsArray.variation.push({
-      attribute: value.name,
+      attribute: attr.name,
       value: resolvedValue
-    })
+    });
   }
   cart.add(product.value.id, quantity.value, matchedVariation.id, selectedVariationsArray.variation, $q, '', openDrawer.value);
 }
