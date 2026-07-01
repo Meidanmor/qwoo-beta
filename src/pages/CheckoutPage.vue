@@ -88,7 +88,7 @@
       <q-card class="q-mb-md">
         <q-card-section>
           <div class="text-h6">Your Cart</div>
-          <div v-for="item in cartItems" :key="item.key" class="q-my-sm flex items-center">
+          <div v-for="item in cartItems" :key="item.key" class="checkout-items q-my-sm flex items-center no-wrap">
           <div>
              <q-img
               v-if="item?.images?.length"
@@ -636,7 +636,9 @@ onMounted(async () => {
   transform: translateY(-5px);
 }
 /* purgecss end ignore */
-
+.checkout-items {
+  gap: 10px;
+}
 .q-form .float-left,
 .q-form .float-right {
   width: 100%;

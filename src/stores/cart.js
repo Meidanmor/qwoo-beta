@@ -591,6 +591,19 @@ async function syncLocalCartWithServer() {
    ------------------------- */
 async function _runSync() {
   if(state.offline === true) return;
+  // NEW: never diff against an unknown server state.
+  // A null cart_array here means we don't actually know what's on the
+  // server (e.g. hard refresh with no SSR data) — fetching first prevents
+  // us from mistaking existing server items for brand-new ones.
+  if (!state.cart_array) {
+    try {
+      const res = await cartFetch(`${API_BASE}/cart`, { credentials: 'include' })
+      if (res.ok) state.cart_array = await res.json()
+    } catch (err) {
+      if (DEBUG) console.warn('[cart] _runSync: pre-fetch of server cart failed', err)
+    }
+  }
+
   // Skip if nothing has actually changed
   if (state.synced === true) {
     try {
